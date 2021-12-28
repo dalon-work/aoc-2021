@@ -43,14 +43,16 @@ fn reset_flashed(energy: &mut Octopi, flashed: &Flashed) -> u32 {
 
 fn part1(energy: &mut Octopi) -> u32 {
 
-    let mut count = 0;
-    for _ in 0..100 {
+    for step in 0..100000 {
         let mut flashed: Flashed = Default::default();
         increment(energy);
         while flash(energy, &mut flashed) {}
-        count += reset_flashed(energy, &flashed);
+        let c = reset_flashed(energy, &flashed);
+        if c == 100 {
+            return (step+1) as u32;
+        }
     }
-    return count;
+    return 0;
 }
 
 fn main() {
