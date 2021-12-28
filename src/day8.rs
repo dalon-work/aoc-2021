@@ -6,7 +6,7 @@ fn main() {
     for l in lines {
         let mut l = l.split(" | ");
         let input = l.next().unwrap();
-        let output =  l.next().unwrap();
+        let output = l.next().unwrap();
         for word in output.split_whitespace() {
             let hs: HashSet<char> = word.chars().collect();
             match hs.len() {

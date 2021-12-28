@@ -1,4 +1,4 @@
-type Board = [[i32;5];5];
+type Board = [[i32; 5]; 5];
 
 fn check_done(b: &Board, i: usize, j: usize) -> bool {
     let mut row_done = true;
@@ -22,7 +22,7 @@ fn sum(b: &Board) -> i32 {
     return s;
 }
 
-fn part1(numbers: &[i32], boards: &[Board], ) -> i32 {
+fn part1(numbers: &[i32], boards: &[Board]) -> i32 {
     let mut boards = boards.to_vec();
 
     for n in numbers {
@@ -32,7 +32,7 @@ fn part1(numbers: &[i32], boards: &[Board], ) -> i32 {
                     if b[i][j] == *n {
                         b[i][j] = -1;
                         if check_done(&b, i, j) {
-                            return n*sum(&b);
+                            return n * sum(&b);
                         }
                     }
                 }
@@ -44,14 +44,14 @@ fn part1(numbers: &[i32], boards: &[Board], ) -> i32 {
 
 use std::collections::HashSet;
 
-fn part2(numbers: &[i32], boards: &[Board], ) -> i32 {
+fn part2(numbers: &[i32], boards: &[Board]) -> i32 {
     let mut boards = boards.to_vec();
     let mut win = HashSet::new();
     let mut order = Vec::new();
 
     for n in numbers {
         if win.len() == boards.len() {
-            break
+            break;
         }
         for (bidx, b) in boards.iter_mut().enumerate() {
             for i in 0..5 {
@@ -61,7 +61,7 @@ fn part2(numbers: &[i32], boards: &[Board], ) -> i32 {
                         if check_done(&b, i, j) {
                             if !win.contains(&bidx) {
                                 win.insert(bidx);
-                                order.push((bidx,*n));
+                                order.push((bidx, *n));
                             }
                         }
                     }
@@ -72,9 +72,8 @@ fn part2(numbers: &[i32], boards: &[Board], ) -> i32 {
 
     let (last_board_idx, last_board_n) = order.last().unwrap();
 
-    return last_board_n*sum(&boards[*last_board_idx]);
+    return last_board_n * sum(&boards[*last_board_idx]);
 }
-
 
 fn parse_board(lines: &mut std::str::Lines) -> Board {
     let mut r: Board = Default::default();
@@ -84,7 +83,7 @@ fn parse_board(lines: &mut std::str::Lines) -> Board {
             r[i][j] = d.parse().unwrap();
         }
     }
-    return r
+    return r;
 }
 
 mod tests {
@@ -92,41 +91,43 @@ mod tests {
 
     #[test]
     fn test_day4() {
-    let mut boards = Vec::<Board>::new();
-    let mut lines = include_str!("../inputs/day4.example.txt").lines();
-    let numbers: Vec<i32> = lines.next().unwrap()
-        .split(',')
-        .map(|i| i.parse().unwrap())
-        .collect();
+        let mut boards = Vec::<Board>::new();
+        let mut lines = include_str!("../inputs/day4.example.txt").lines();
+        let numbers: Vec<i32> = lines
+            .next()
+            .unwrap()
+            .split(',')
+            .map(|i| i.parse().unwrap())
+            .collect();
 
-    loop {
-        match lines.next() {
-            Some(_) => boards.push( parse_board(&mut lines) ),
-            None => break,
+        loop {
+            match lines.next() {
+                Some(_) => boards.push(parse_board(&mut lines)),
+                None => break,
+            }
         }
-    }
-    assert_eq!(part1(&numbers, &boards), 4512);
-    assert_eq!(part2(&numbers, &boards), 1924);
+        assert_eq!(part1(&numbers, &boards), 4512);
+        assert_eq!(part2(&numbers, &boards), 1924);
     }
 }
-
 
 fn main() {
     let mut boards = Vec::<Board>::new();
     let mut lines = include_str!("../inputs/day4.txt").lines();
-    let numbers: Vec<i32> = lines.next().unwrap()
+    let numbers: Vec<i32> = lines
+        .next()
+        .unwrap()
         .split(',')
         .map(|i| i.parse().unwrap())
         .collect();
 
     loop {
         match lines.next() {
-            Some(_) => boards.push( parse_board(&mut lines) ),
+            Some(_) => boards.push(parse_board(&mut lines)),
             None => break,
         }
     }
 
     println!("Part 1 {}", part1(&numbers, &boards));
     println!("Part 2 {}", part2(&numbers, &boards));
-
 }
