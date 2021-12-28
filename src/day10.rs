@@ -86,9 +86,7 @@ fn run(lines: &mut std::str::Lines) -> (usize, usize) {
     for l in lines {
         if let Err(e) = parse(&mut l.chars()) {
             match e {
-                LineError::Corrupted(score) => {
-                    part1 += score;
-                }
+                LineError::Corrupted(score) => part1 += score,
                 LineError::Incomplete(score) => part2.push(score),
             }
         }
