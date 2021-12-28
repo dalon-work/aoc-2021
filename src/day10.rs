@@ -45,6 +45,8 @@ fn open(b: Brace, ch: &mut std::str::Chars) -> Result<Brace, LineError> {
             if closing_brace != b {
                 return Err(corrupted(closing_brace));
             } else {
+                // successfully matched, so try parsing the next character
+                // and pass it back up the call stack
                 return parse(ch);
             }
         }
