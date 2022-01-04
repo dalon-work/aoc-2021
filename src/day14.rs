@@ -35,7 +35,7 @@ fn part1(pair_map: HashMap<Pair, usize>, mut letter_map: HashMap<Letter, usize>,
 
     let mut old_pairs = pair_map.clone();
 
-    for _ in (0..10) {
+    for _ in (0..40) {
         let mut new_pairs = HashMap::new();
         for (pair,new_letter) in &inst {
             let old_count = *old_pairs.entry( *pair ).or_insert(0);
