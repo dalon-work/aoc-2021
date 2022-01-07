@@ -83,8 +83,31 @@ fn part1(risk: &Vec<Vec<usize>>) -> usize {
     }
 }
 
+fn part2(risk: &Vec<Vec<usize>>) -> usize {
+    let (X,Y) = (risk[0].len(), risk.len());
+    let (newX,newY) = (X*5, Y*5);
+    let mut new_risk = vec![vec![0usize;newX]; newY];
+
+    for I in 0..5 {
+        for J in 0..5 {
+            let scale = I+J;
+            for i in 0..X {
+                for j in 0..Y {
+                    let (newi,newj) = (I*X+i, J*Y+j);
+                    let mut r = risk[i][j] + scale;
+                    while r > 9 {
+                        r -= 9;
+                    }
+                    new_risk[newi][newj] = r;
+                }
+            }
+        }
+    }
+    return part1(&new_risk);
+}
 
 fn main() {
     let risk: Vec<Vec<usize>> = include_str!("../inputs/day15.txt").lines().map(|l| l.chars().map(|c| c.to_digit(10).unwrap() as usize).collect::<Vec<usize>>()).collect();
     println!("{}", part1(&risk));
+    println!("{}", part2(&risk));
 }
