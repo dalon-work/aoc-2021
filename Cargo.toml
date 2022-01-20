@@ -65,9 +65,14 @@ path = "src/day14.rs"
 name = "day15"
 path = "src/day15.rs"
 
+[[bin]]
+name = "day16"
+path = "src/day16.rs"
 [dependencies]
 regex = "*"
 ndarray = "*"
 nalgebra = "*"
 nom = "*"
 itertools = "*"
+hex = "*"
+bitvec = "*"
