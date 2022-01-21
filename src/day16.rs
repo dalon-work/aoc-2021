@@ -59,6 +59,26 @@ impl Packet {
             }
         }
     }
+
+    fn do_math(&self) -> u64 {
+        match self {
+            Packet::Literal(literal) => {
+                return literal.value;
+            },
+            Packet::Operator(operator) => {
+                match operator.header.packet_type {
+                    0 => operator.packets.iter().map(|p| p.do_math()).sum(),
+                    1 => operator.packets.iter().map(|p| p.do_math()).product(),
+                    2 => operator.packets.iter().map(|p| p.do_math()).min().unwrap(),
+                    3 => operator.packets.iter().map(|p| p.do_math()).max().unwrap(),
+                    5 => (operator.packets[0].do_math() > operator.packets[1].do_math()) as u64,
+                    6 => (operator.packets[0].do_math() < operator.packets[1].do_math()) as u64,
+                    7 => (operator.packets[0].do_math() == operator.packets[1].do_math()) as u64,
+                    _ => unreachable!(),
+                }
+            }
+        }
+    }
 }
 
 struct PacketParser {
@@ -265,4 +285,5 @@ fn main() {
     let mut pp = PacketParser::new( Vec::from_hex( include_str!("../inputs/day16.txt").trim() ).expect("Invalid hex string") );
     let p = pp.parse_packet();
     println!("{}",p.add_version_numbers());
+    println!("{}",p.do_math());
 }
