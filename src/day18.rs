@@ -9,6 +9,7 @@ enum Token {
     Num(usize),
 }
 
+#[derive(Clone)]
 struct SF {
     tokens: Vec<Token>
 }
@@ -181,27 +182,27 @@ impl SF {
     }
 }
 
-impl Add for SF {
-    type Output = Self;
+impl Add for &SF {
+    type Output = SF;
 
-    fn add(mut self, mut other: Self) -> Self {
+    fn add(self, other: Self) -> SF {
 
         if self.tokens.len() == 0 {
-            return other;
+            return other.clone();
         }
 
         if other.tokens.len() == 0 {
-            return self;
+            return self.clone();
         }
 
         let mut tokens = Vec::<Token>::with_capacity( self.tokens.len() + other.tokens.len() + 3 );
         tokens.push(Token::Open);
-        tokens.append(&mut self.tokens);
+        tokens.extend_from_slice(&self.tokens);
         tokens.push(Token::Comma);
-        tokens.append(&mut other.tokens);
+        tokens.extend_from_slice(&other.tokens);
         tokens.push(Token::Close);
 
-        let mut s = Self{tokens};
+        let mut s = SF{tokens};
         s.reduce();
 
         return s;
@@ -317,11 +318,11 @@ mod test {
     }
 }
 
-fn sum_lines(mut lines: std::str::Lines) -> SF {
+fn sum_lines(lines: std::str::Lines) -> SF {
     let mut sf = SF{tokens: vec![]};
 
     for l in lines {
-        sf = sf + SF::parse(l);
+        sf = &sf + &SF::parse(l);
     }
 
     return sf;
@@ -330,6 +331,19 @@ fn sum_lines(mut lines: std::str::Lines) -> SF {
 fn main() {
     let input = include_str!("../inputs/day18.txt");
     let sum = sum_lines(input.lines());
-    let mut idx = 0;
     println!("part 1 mag {}", sum.mag());
+
+    let allsf: Vec::<SF> = input.lines().map(|l| SF::parse(l)).collect();
+
+    let mut max_mag = 0;
+    for i in 0..allsf.len() {
+        for j in 0..allsf.len() {
+            if i == j {
+                continue;
+            }
+            max_mag = std::cmp::max(max_mag, (&allsf[i] + &allsf[j]).mag());
+            max_mag = std::cmp::max(max_mag, (&allsf[j] + &allsf[i]).mag());
+        }
+    }
+    println!("part 2 max {}", max_mag);
 }
